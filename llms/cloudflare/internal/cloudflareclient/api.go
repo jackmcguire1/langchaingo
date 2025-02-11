@@ -18,7 +18,9 @@ func (c *Client) CreateEmbedding(ctx context.Context, texts *CreateEmbeddingRequ
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +61,8 @@ func (c *Client) GenerateContent(ctx context.Context, request *GenerateContentRe
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +149,8 @@ func (c *Client) Summarize(ctx context.Context, inputText string, maxLength int)
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}

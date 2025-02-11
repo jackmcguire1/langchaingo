@@ -109,6 +109,8 @@ func (o *LLM) GenerateContent(ctx context.Context, messages []llms.MessageConten
 
 	stream := func(b bool) *bool { return &b }(opts.StreamingFunc != nil)
 
+	o.client.SetModel(opts.Model)
+
 	res, err := o.client.GenerateContent(ctx, &cloudflareclient.GenerateContentRequest{
 		Messages:      chatMsgs,
 		Stream:        *stream,

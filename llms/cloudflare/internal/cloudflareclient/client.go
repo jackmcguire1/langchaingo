@@ -1,7 +1,6 @@
 package cloudflareclient
 
 import (
-	"fmt"
 	"net/http"
 )
 
@@ -28,7 +27,11 @@ func NewClient(client httpClient, accountID, baseURL, token, modelName, embeddin
 		token:              token,
 		modelName:          modelName,
 		embeddingModelName: embeddingModelName,
-		endpointURL:        fmt.Sprintf("%s/%s/ai/run/%s", baseURL, accountID, modelName),
+		endpointURL:        "%s/%s/ai/run/%s",
 		bearerToken:        "Bearer " + token,
 	}
+}
+
+func (c *Client) SetModel(model string) {
+	c.modelName = model
 }
