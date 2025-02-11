@@ -1,8 +1,8 @@
 module github.com/tmc/langchaingo/examples/mistral-embedding-example
 
-go 1.22.0
+go 1.23
 
-toolchain go1.22.1
+toolchain go1.23.1
 
 require github.com/tmc/langchaingo v0.1.13-pre.1
 
