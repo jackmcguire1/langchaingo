@@ -2,6 +2,7 @@ package openai
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 
 	"github.com/tmc/langchaingo/callbacks"
@@ -267,4 +268,31 @@ func toolCallFromToolCall(tc llms.ToolCall) openaiclient.ToolCall {
 			Arguments: tc.FunctionCall.Arguments,
 		},
 	}
+}
+
+func (o *LLM) GenerateImage(ctx context.Context, text string, options ...llms.CallOption) (*llms.BinaryContent, error) {
+	opts := llms.CallOptions{}
+	for _, opt := range options {
+		opt(&opts)
+	}
+
+	request := &openaiclient.ImageRequest{
+		Prompt:         text,
+		Model:          opts.Model,
+		N:              0,
+		Quality:        "standard",
+		Size:           "1024x1024",
+		ResponseFormat: "b64_json",
+	}
+	respBase64, err := o.client.CreateImage(ctx, request)
+	if err != nil {
+		return nil, err
+	}
+
+	imgBytes, err := base64.StdEncoding.DecodeString(respBase64.Data[0].B64JSON)
+	if err != nil {
+		return nil, err
+	}
+
+	return &llms.BinaryContent{Data: imgBytes, MIMEType: "image/jpeg"}, nil
 }

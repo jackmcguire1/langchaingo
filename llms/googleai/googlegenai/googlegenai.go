@@ -136,9 +136,9 @@ func (g *GoogleAI) GenerateContent(
 
 func (g *GoogleAI) GenerateImage(
 	ctx context.Context,
-	message llms.TextContent,
+	text string,
 	options ...llms.CallOption,
-) ([]*llms.BinaryContent, error) {
+) (*llms.BinaryContent, error) {
 	opts := llms.CallOptions{
 		Model:          g.opts.DefaultModel,
 		CandidateCount: g.opts.DefaultCandidateCount,
@@ -164,8 +164,7 @@ func (g *GoogleAI) GenerateImage(
 		OutputMIMEType: opts.ResponseMIMEType,
 	}
 
-	var response []*llms.BinaryContent
-	resp, err := g.client.Models.GenerateImages(ctx, opts.Model, message.Text, config)
+	resp, err := g.client.Models.GenerateImages(ctx, opts.Model, text, config)
 	if err != nil {
 		return nil, err
 	}
@@ -173,17 +172,15 @@ func (g *GoogleAI) GenerateImage(
 		return nil, ErrNoContentInResponse
 	}
 
-	for _, image := range resp.GeneratedImages {
-		if image.Image == nil {
-			continue
-		}
-
-		response = append(response, &llms.BinaryContent{
-			Data:     image.Image.ImageBytes,
-			MIMEType: image.Image.MIMEType,
-		})
+	if resp.GeneratedImages[0].Image == nil {
+		return nil, ErrNoContentInResponse
 	}
-	return response, nil
+	image := resp.GeneratedImages[0].Image
+
+	return &llms.BinaryContent{
+		Data:     image.ImageBytes,
+		MIMEType: image.MIMEType,
+	}, nil
 }
 
 // convertCandidates converts a sequence of genai.Candidate to a response.

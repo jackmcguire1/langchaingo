@@ -39,6 +39,17 @@ type SummarizeRequest struct {
 	MaxLength int    `json:"max_length"`
 }
 
+type GenerateImageRequest struct {
+	Prompt string `json:"prompt"`
+	Height int    `json:"height"`
+	Width  int    `json:"width"`
+}
+
+type GenerateImageResponse struct {
+	Data     []byte `json:"data"`
+	MimeType string `json:"mime_type"`
+}
+
 type SummarizeResponse struct {
 	Result struct {
 		Summary string `json:"summary"`
@@ -55,4 +66,22 @@ type CreateEmbeddingResponse struct {
 		Shape []int       `json:"shape"`
 		Data  [][]float32 `json:"data"`
 	} `json:"result"`
+}
+
+type CreateTranslationRequest struct {
+	Text           string `json:"text"`
+	SourceLanguage string `json:"source_lang"`
+	TargetLanguage string `json:"target_lang"`
+}
+
+type CreateTranslationResponse struct {
+	Result struct {
+		TranslatedText string `json:"translated_text"`
+	} `json:"result"`
+	Errors []struct {
+		Code    int    `json:"code"`
+		Message string `json:"message"`
+	} `json:"errors,omitempty"`
+	Messages []string `json:"messages,omitempty"`
+	Success  bool     `json:"success"`
 }

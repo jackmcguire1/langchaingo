@@ -159,6 +159,35 @@ func (o *LLM) CreateEmbedding(ctx context.Context, inputTexts []string) ([][]flo
 	return res.Result.Data, nil
 }
 
+func (o *LLM) CreateImage(ctx context.Context, text string, options ...llms.CallOption) (*llms.BinaryContent, error) {
+	opts := llms.CallOptions{}
+	for _, opt := range options {
+		opt(&opts)
+	}
+	o.client.SetModel(opts.Model)
+
+	return o.client.GenerateImage(ctx, &cloudflareclient.GenerateImageRequest{Prompt: text})
+}
+
+func (o *LLM) CreateTranslation(ctx context.Context, text string, sourceLanguage string, targetLanguage string, options ...llms.CallOption) (*llms.TextContent, error) {
+	opts := llms.CallOptions{}
+	for _, opt := range options {
+		opt(&opts)
+	}
+	o.client.SetModel(opts.Model)
+
+	resp, err := o.client.CreateTranslation(ctx, &cloudflareclient.CreateTranslationRequest{
+		Text:           text,
+		SourceLanguage: sourceLanguage,
+		TargetLanguage: targetLanguage,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &llms.TextContent{Text: resp.Result.TranslatedText}, nil
+}
+
 func typeToRole(typ llms.ChatMessageType) cloudflareclient.Role {
 	switch typ {
 	case llms.ChatMessageTypeSystem:
