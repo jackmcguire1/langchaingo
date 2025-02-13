@@ -166,7 +166,13 @@ func (o *LLM) CreateImage(ctx context.Context, text string, options ...llms.Call
 	}
 	o.client.SetModel(opts.Model)
 
-	return o.client.GenerateImage(ctx, &cloudflareclient.GenerateImageRequest{Prompt: text})
+	return o.client.GenerateImage(
+		ctx, &cloudflareclient.GenerateImageRequest{
+			Prompt: text,
+			Height: 1024,
+			Width:  1024,
+		},
+	)
 }
 
 func (o *LLM) CreateTranslation(ctx context.Context, text string, sourceLanguage string, targetLanguage string, options ...llms.CallOption) (*llms.TextContent, error) {
