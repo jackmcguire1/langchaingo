@@ -27,8 +27,8 @@ const (
 	CITATIONS            = "citations"
 	SAFETY               = "safety"
 	RoleSystem           = "system"
-	RoleModel            = "model"
-	RoleUser             = "user"
+	RoleModel            = genai.RoleModel
+	RoleUser             = genai.RoleUser
 	RoleTool             = "tool"
 	ResponseMIMETypeJson = "application/json"
 )
@@ -279,7 +279,7 @@ func convertContent(content llms.MessageContent) (*genai.Content, error) {
 
 	switch content.Role {
 	case llms.ChatMessageTypeSystem:
-		c.Role = RoleSystem
+		c.Role = RoleModel
 	case llms.ChatMessageTypeAI:
 		c.Role = RoleModel
 	case llms.ChatMessageTypeHuman:
@@ -313,6 +313,7 @@ func generateFromSingleMessage(
 
 	contents := []*genai.Content{&genai.Content{
 		Parts: convertedParts,
+		Role:  RoleUser,
 	}}
 	if llmOpts.StreamingFunc == nil {
 		// When no streaming is requested, just call GenerateContent and return
