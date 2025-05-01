@@ -5,6 +5,8 @@ package googlegenai
 import (
 	"context"
 
+	"cloud.google.com/go/auth"
+	"cloud.google.com/go/auth/oauth2adapt"
 	"github.com/tmc/langchaingo/callbacks"
 	"github.com/tmc/langchaingo/llms"
 	"golang.org/x/oauth2/google"
@@ -58,12 +60,16 @@ func New(ctx context.Context, opts ...Option) (*GoogleAI, error) {
 		httpOptions = genai.HTTPOptions{
 			BaseURL:    clientOptions.HTTPOPtions.BaseURL,
 			APIVersion: clientOptions.HTTPOPtions.APIVersion,
-			Timeout:    clientOptions.HTTPOPtions.Timeout,
 		}
 	}
 
+	credentialOptions := &auth.CredentialsOptions{
+		TokenProvider: oauth2adapt.TokenProviderFromTokenSource(googleCredentials.TokenSource),
+		JSON:          clientOptions.Credentials.CredentialsJSON,
+	}
+
 	cfg := &genai.ClientConfig{
-		Credentials: googleCredentials,
+		Credentials: auth.NewCredentials(credentialOptions),
 		Backend:     genai.Backend(clientOptions.APIBackend),
 		Project:     clientOptions.CloudProject,
 		Location:    clientOptions.CloudLocation,

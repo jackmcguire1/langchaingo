@@ -10,6 +10,7 @@ import (
 	"iter"
 	"strings"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/tmc/langchaingo/internal/imageutil"
 	"github.com/tmc/langchaingo/llms"
 	"google.golang.org/api/iterator"
@@ -60,22 +61,20 @@ func (g *GoogleAI) GenerateContent(
 	}
 
 	topK := float64(opts.TopK)
-	candidateCount := int64(opts.CandidateCount)
-	maxtokens := int64(opts.MaxTokens)
-	seed := int64(opts.Seed)
+
 	config := &genai.GenerateContentConfig{
 		SystemInstruction: nil,
-		Temperature:       &opts.Temperature,
+		Temperature:       aws.Float32(float32(opts.Temperature)),
 		TopP:              nil,
-		TopK:              &topK,
-		CandidateCount:    &candidateCount,
-		MaxOutputTokens:   &maxtokens,
+		TopK:              aws.Float32(float32(topK)),
+		CandidateCount:    int32(opts.CandidateCount),
+		MaxOutputTokens:   int32(opts.MaxTokens),
 		StopSequences:     opts.StopWords,
 		ResponseLogprobs:  false,
 		Logprobs:          nil,
 		PresencePenalty:   nil,
 		FrequencyPenalty:  nil,
-		Seed:              &seed,
+		Seed:              aws.Int32(int32(opts.Seed)),
 		ResponseMIMEType:  "",
 		RoutingConfig:     nil,
 		SafetySettings: []*genai.SafetySetting{
@@ -159,8 +158,8 @@ func (g *GoogleAI) GenerateImage(
 
 	var seed int64 = int64(opts.Seed)
 	config := &genai.GenerateImagesConfig{
-		NumberOfImages: &numberOfImages,
-		Seed:           &seed,
+		NumberOfImages: int32(numberOfImages),
+		Seed:           aws.Int32(int32(seed)),
 		OutputMIMEType: opts.ResponseMIMEType,
 	}
 
