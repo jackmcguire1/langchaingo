@@ -254,9 +254,8 @@ require (
 	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/goph/emperror v0.17.2 // indirect
-	github.com/gorilla/css v1.0.0 // indirect
 	github.com/gorilla/websocket v1.5.3 // indirect
-	github.com/grpc-ecosystem/go-grpc-middleware v1.3.0 // indirect
+	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/huandu/xstrings v1.3.3 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
 	github.com/josharian/intern v1.0.0 // indirect
@@ -305,62 +304,10 @@ require (
 )
 
 require github.com/stretchr/objx v0.5.2 // indirect
+
 require (
-	cloud.google.com/go/aiplatform v1.68.0
-	cloud.google.com/go/alloydbconn v1.13.2
 	cloud.google.com/go/auth v0.14.0
 	cloud.google.com/go/auth/oauth2adapt v0.2.7
-	cloud.google.com/go/cloudsqlconn v1.14.1
-	cloud.google.com/go/vertexai v0.12.0
-	github.com/AssemblyAI/assemblyai-go-sdk v1.3.0
-	github.com/Code-Hex/go-generics-cache v1.3.1
-	github.com/IBM/watsonx-go v1.0.0
-	github.com/Masterminds/sprig/v3 v3.2.3
-	github.com/PuerkitoBio/goquery v1.8.1
-	github.com/amikos-tech/chroma-go v0.1.2
-	github.com/aws/aws-sdk-go-v2 v1.36.3
-	github.com/aws/aws-sdk-go-v2/config v1.27.12
-	github.com/aws/aws-sdk-go-v2/service/bedrockagent v1.40.0
-	github.com/aws/aws-sdk-go-v2/service/bedrockagentruntime v1.41.0
-	github.com/aws/aws-sdk-go-v2/service/bedrockruntime v1.8.1
-	github.com/aws/aws-sdk-go-v2/service/s3 v1.78.2
-	github.com/aws/smithy-go v1.22.2
-	github.com/cohere-ai/tokenizer v1.1.2
-	github.com/fatih/color v1.17.0
-	github.com/gage-technologies/mistral-go v1.1.0
-	github.com/getzep/zep-go v1.0.4
-	github.com/go-openapi/strfmt v0.21.3
-	github.com/go-sql-driver/mysql v1.8.1
-	github.com/gocolly/colly v1.2.0
-	github.com/google/generative-ai-go v0.15.1
-	github.com/google/go-cmp v0.6.0
-	github.com/jackc/pgx/v5 v5.7.2
-	github.com/ledongthuc/pdf v0.0.0-20220302134840-0c2507a12d80
-	github.com/mattn/go-sqlite3 v1.14.17
-	github.com/metaphorsystems/metaphor-go v0.0.0-20230816231421-43794c04824e
-	github.com/microcosm-cc/bluemonday v1.0.26
-	github.com/milvus-io/milvus-sdk-go/v2 v2.3.6
-	github.com/nikolalohinski/gonja v1.5.3
-	github.com/nlpodyssey/cybertron v0.2.1
-	github.com/opensearch-project/opensearch-go v1.1.0
-	github.com/pgvector/pgvector-go v0.1.1
-	github.com/pinecone-io/go-pinecone v0.4.1
-	github.com/pkoukk/tiktoken-go v0.1.6
-	github.com/redis/rueidis v1.0.34
-	github.com/weaviate/weaviate v1.24.1
-	github.com/weaviate/weaviate-go-client/v4 v4.13.1
-	github.com/zeebo/blake3 v0.2.4
-	gitlab.com/golang-commonmark/markdown v0.0.0-20211110145824-bf3e522c626a
-	go.mongodb.org/mongo-driver v1.14.0
-	go.mongodb.org/mongo-driver/v2 v2.0.0
-	go.starlark.net v0.0.0-20230302034142-4b1e35fe2254
-	golang.org/x/exp v0.0.0-20230713183714-613f0c0eb8a1
-	golang.org/x/oauth2 v0.25.0
-	golang.org/x/sync v0.10.0
-	golang.org/x/tools v0.21.1-0.20240508182429-e35e4ccd0d2d
-	google.golang.org/api v0.218.0
+	github.com/google/uuid v1.6.0
 	google.golang.org/genai v1.3.0
-	google.golang.org/grpc v1.70.0
-	google.golang.org/protobuf v1.36.3
-	sigs.k8s.io/yaml v1.3.0
 )
