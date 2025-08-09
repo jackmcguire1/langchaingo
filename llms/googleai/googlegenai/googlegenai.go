@@ -156,12 +156,9 @@ func (g *GoogleAI) GenerateImage(
 		numberOfImages = numberOfImagesI.(int64)
 	}
 
-	var seed int32 = int32(opts.Seed)
 	config := &genai.GenerateImagesConfig{
 		NumberOfImages: int32(numberOfImages),
 		OutputMIMEType: opts.ResponseMIMEType,
-		AddWatermark:   false,
-		Seed:           aws.Int32(seed),
 	}
 
 	resp, err := g.client.Models.GenerateImages(ctx, opts.Model, text, config)
