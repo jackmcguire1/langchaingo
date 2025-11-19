@@ -514,6 +514,10 @@ func (o *LLM) GenerateImage(ctx context.Context, text string, options ...llms.Ca
 		Size:           "1024x1024",
 		ResponseFormat: "b64_json",
 	}
+	if opts.Model == "gpt-image-1" {
+		request.Quality = "low"
+		request.ResponseFormat = ""
+	}
 	respBase64, err := o.client.CreateImage(ctx, request)
 	if err != nil {
 		return nil, err
