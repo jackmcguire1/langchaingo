@@ -2,8 +2,6 @@ module github.com/tmc/langchaingo
 
 go 1.24.4
 
-toolchain go1.24.2
-
 require (
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.38.0
@@ -303,8 +301,12 @@ require (
 )
 
 require (
+	cloud.google.com/go/auth v0.14.0
+	cloud.google.com/go/auth/oauth2adapt v0.2.7
+	github.com/google/uuid v1.6.0
 	github.com/milvus-io/milvus/client/v2 v2.6.0
 	github.com/testcontainers/testcontainers-go/modules/mariadb v0.38.0
+	google.golang.org/genai v1.36.0
 )
 
 require (
@@ -318,7 +320,6 @@ require (
 	github.com/form3tech-oss/jwt-go v3.2.3+incompatible // indirect
 	github.com/godbus/dbus/v5 v5.0.4 // indirect
 	github.com/google/btree v1.1.3 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect
