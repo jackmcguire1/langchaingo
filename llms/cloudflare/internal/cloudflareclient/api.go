@@ -9,6 +9,8 @@ import (
 	"io"
 	"net/http"
 	"strings"
+
+	"github.com/tmc/langchaingo/llms"
 )
 
 // CreateEmbedding creates an embedding from the given texts.
@@ -18,7 +20,9 @@ func (c *Client) CreateEmbedding(ctx context.Context, texts *CreateEmbeddingRequ
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
@@ -59,7 +63,8 @@ func (c *Client) GenerateContent(ctx context.Context, request *GenerateContentRe
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
@@ -146,7 +151,8 @@ func (c *Client) Summarize(ctx context.Context, inputText string, maxLength int)
 		return nil, err
 	}
 
-	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.endpointURL, bytes.NewBuffer(requestBody))
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
 	if err != nil {
 		return nil, err
 	}
@@ -176,4 +182,81 @@ func (c *Client) Summarize(ctx context.Context, inputText string, maxLength int)
 	}
 
 	return &summarizeResponse, nil
+}
+
+func (c *Client) GenerateImage(ctx context.Context, imageReq *GenerateImageRequest) (*llms.BinaryContent, error) {
+	jsonPayload, err := json.Marshal(imageReq)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(jsonPayload))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", c.bearerToken)
+	req.Header.Add("Content-Type", "application/json")
+
+	resp, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode > 299 {
+		return nil, fmt.Errorf("error: %s", body)
+	}
+
+	return &llms.BinaryContent{
+		Data:     body,
+		MIMEType: "image/jpeg",
+	}, nil
+}
+
+// GenerateContent generates text based on the given prompts.
+func (c *Client) CreateTranslation(ctx context.Context, request *CreateTranslationRequest) (*CreateTranslationResponse, error) { // nolint:funlen,cyclop
+	requestBody, err := json.Marshal(request)
+	if err != nil {
+		return nil, err
+	}
+
+	url := fmt.Sprintf(c.endpointURL, c.baseURL, c.accountID, c.modelName)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewBuffer(requestBody))
+	if err != nil {
+		return nil, err
+	}
+
+	req.Header.Add("Authorization", c.bearerToken)
+	req.Header.Add("Content-Type", "application/json")
+
+	response, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	data, err := io.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	var res *CreateTranslationResponse
+	err = json.Unmarshal(data, &res)
+	if err != nil {
+		return nil, err
+	}
+
+	if !res.Success {
+		err = fmt.Errorf("didn't get success from cloudflare model %s", string(data))
+		return nil, err
+	}
+
+	return res, nil
 }

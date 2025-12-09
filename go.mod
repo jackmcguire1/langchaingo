@@ -2,19 +2,6 @@ module github.com/tmc/langchaingo
 
 go 1.24.4
 
-toolchain go1.24.6
-
-// Note: Thanks to Go's module graph pruning (https://go.dev/ref/mod#graph-pruning),
-// importing langchaingo does NOT pull in all dependencies listed below. You only
-// get dependencies for the specific packages you import. For example:
-//   - import "github.com/tmc/langchaingo/llms/openai" → only OpenAI-related deps
-//   - import "github.com/tmc/langchaingo/vectorstores/chroma" → only Chroma deps
-// This keeps your builds lean despite this large go.mod file.
-
-// Core dependencies
-require github.com/google/uuid v1.6.0
-
-// Testing
 require (
 	github.com/stretchr/testify v1.10.0
 	github.com/testcontainers/testcontainers-go v0.38.0
@@ -119,8 +106,6 @@ require (
 	cloud.google.com/go v0.116.0 // indirect
 	cloud.google.com/go/ai v0.7.0 // indirect
 	cloud.google.com/go/alloydb v1.14.0 // indirect
-	cloud.google.com/go/auth v0.14.0 // indirect
-	cloud.google.com/go/auth/oauth2adapt v0.2.7 // indirect
 	cloud.google.com/go/compute/metadata v0.6.0 // indirect
 	cloud.google.com/go/iam v1.2.2 // indirect
 	cloud.google.com/go/longrunning v0.6.2 // indirect
@@ -266,6 +251,7 @@ require (
 	github.com/google/flatbuffers v23.5.26+incompatible // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/goph/emperror v0.17.2 // indirect
+	github.com/gorilla/websocket v1.5.3 // indirect
 	github.com/grpc-ecosystem/go-grpc-middleware v1.4.0 // indirect
 	github.com/huandu/xstrings v1.3.3 // indirect
 	github.com/imdario/mergo v0.3.13 // indirect
@@ -315,8 +301,12 @@ require (
 )
 
 require (
+	cloud.google.com/go/auth v0.14.0
+	cloud.google.com/go/auth/oauth2adapt v0.2.7
+	github.com/google/uuid v1.6.0
 	github.com/milvus-io/milvus/client/v2 v2.6.0
 	github.com/testcontainers/testcontainers-go/modules/mariadb v0.38.0
+	google.golang.org/genai v1.36.0
 )
 
 require (
@@ -330,7 +320,6 @@ require (
 	github.com/form3tech-oss/jwt-go v3.2.3+incompatible // indirect
 	github.com/godbus/dbus/v5 v5.0.4 // indirect
 	github.com/google/btree v1.1.3 // indirect
-	github.com/gorilla/websocket v1.5.0 // indirect
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway v1.16.0 // indirect
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.18.0 // indirect

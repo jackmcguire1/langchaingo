@@ -1,7 +1,9 @@
 package openaiclient
 
 import (
+	"bytes"
 	"context"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net"
@@ -105,6 +107,70 @@ func (c *Client) CreateCompletion(ctx context.Context, r *CompletionRequest) (*C
 	return &Completion{
 		Text: resp.Choices[0].Message.Content,
 	}, nil
+}
+
+// ImageResponse represents a response structure for image API.
+type ImageResponse struct {
+	Created int64                    `json:"created,omitempty"`
+	Data    []ImageResponseDataInner `json:"data,omitempty"`
+}
+
+// ImageResponseDataInner represents a response data structure for image API.
+type ImageResponseDataInner struct {
+	URL           string `json:"url,omitempty"`
+	B64JSON       string `json:"b64_json,omitempty"`
+	RevisedPrompt string `json:"revised_prompt,omitempty"`
+}
+
+// CreateCompletion creates a completion.
+func (c *Client) CreateImage(ctx context.Context, r *ImageRequest) (*ImageResponse, error) {
+	resp, err := c.createImage(ctx, r)
+	if err != nil {
+		return nil, err
+	}
+	if len(resp.Data) == 0 {
+		return nil, ErrEmptyResponse
+	}
+	return resp, nil
+}
+
+func (c *Client) createImage(ctx context.Context, payload *ImageRequest) (*ImageResponse, error) {
+	// Build request payload
+
+	payloadBytes, err := json.Marshal(payload)
+	if err != nil {
+		return nil, err
+	}
+
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, c.buildURL("/images/generations", payload.Model), bytes.NewReader(payloadBytes))
+	if err != nil {
+		return nil, err
+	}
+
+	c.setHeaders(req)
+
+	// Send request
+	r, err := c.httpClient.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	defer r.Body.Close()
+
+	if r.StatusCode != http.StatusOK {
+		msg := fmt.Sprintf("API returned unexpected status code: %d", r.StatusCode)
+
+		// No need to check the error here: if it fails, we'll just return the
+		// status code.
+		var errResp errorMessage
+		if err := json.NewDecoder(r.Body).Decode(&errResp); err != nil {
+			return nil, errors.New(msg) // nolint:goerr113
+		}
+
+		return nil, fmt.Errorf("%s: %s", msg, errResp.Error.Message) // nolint:goerr113
+	}
+	// Parse response
+	var response ImageResponse
+	return &response, json.NewDecoder(r.Body).Decode(&response)
 }
 
 // EmbeddingRequest is a request to create an embedding.

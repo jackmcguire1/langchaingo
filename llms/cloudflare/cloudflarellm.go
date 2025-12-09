@@ -115,6 +115,8 @@ func (o *LLM) GenerateContent(ctx context.Context, messages []llms.MessageConten
 
 	stream := func(b bool) *bool { return &b }(opts.StreamingFunc != nil)
 
+	o.client.SetModel(opts.Model)
+
 	res, err := o.client.GenerateContent(ctx, &cloudflareclient.GenerateContentRequest{
 		Messages:      chatMsgs,
 		Stream:        *stream,
@@ -161,6 +163,41 @@ func (o *LLM) CreateEmbedding(ctx context.Context, inputTexts []string) ([][]flo
 	}
 
 	return res.Result.Data, nil
+}
+
+func (o *LLM) CreateImage(ctx context.Context, text string, options ...llms.CallOption) (*llms.BinaryContent, error) {
+	opts := llms.CallOptions{}
+	for _, opt := range options {
+		opt(&opts)
+	}
+	o.client.SetModel(opts.Model)
+
+	return o.client.GenerateImage(
+		ctx, &cloudflareclient.GenerateImageRequest{
+			Prompt: text,
+			Height: 1024,
+			Width:  1024,
+		},
+	)
+}
+
+func (o *LLM) CreateTranslation(ctx context.Context, text string, sourceLanguage string, targetLanguage string, options ...llms.CallOption) (*llms.TextContent, error) {
+	opts := llms.CallOptions{}
+	for _, opt := range options {
+		opt(&opts)
+	}
+	o.client.SetModel(opts.Model)
+
+	resp, err := o.client.CreateTranslation(ctx, &cloudflareclient.CreateTranslationRequest{
+		Text:           text,
+		SourceLanguage: sourceLanguage,
+		TargetLanguage: targetLanguage,
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &llms.TextContent{Text: resp.Result.TranslatedText}, nil
 }
 
 func typeToRole(typ llms.ChatMessageType) cloudflareclient.Role {
