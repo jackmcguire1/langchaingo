@@ -107,7 +107,7 @@ func NewFromApiKey(ctx context.Context, apiKey string, opts ...Option) (*GoogleA
 
 	cfg := &genai.ClientConfig{
 		Backend:     genai.Backend(clientOptions.APIBackend),
-		APIKey:      clientOptions.Credentials.APIKey,
+		APIKey:      apiKey,
 		HTTPClient:  clientOptions.HTTPClient,
 		HTTPOptions: httpOptions,
 	}
