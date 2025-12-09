@@ -85,3 +85,37 @@ func New(ctx context.Context, opts ...Option) (*GoogleAI, error) {
 	gi.client = client
 	return gi, nil
 }
+
+func NewFromApiKey(ctx context.Context, apiKey string, opts ...Option) (*GoogleAI, error) {
+	clientOptions := DefaultOptions()
+	for _, opt := range opts {
+		opt(&clientOptions)
+	}
+	clientOptions.EnsureAuthPresent()
+
+	gi := &GoogleAI{
+		opts: clientOptions,
+	}
+
+	var httpOptions genai.HTTPOptions
+	if clientOptions.HTTPOPtions != nil {
+		httpOptions = genai.HTTPOptions{
+			BaseURL:    clientOptions.HTTPOPtions.BaseURL,
+			APIVersion: clientOptions.HTTPOPtions.APIVersion,
+		}
+	}
+
+	cfg := &genai.ClientConfig{
+		Backend:     genai.Backend(clientOptions.APIBackend),
+		APIKey:      clientOptions.Credentials.APIKey,
+		HTTPClient:  clientOptions.HTTPClient,
+		HTTPOptions: httpOptions,
+	}
+	client, err := genai.NewClient(ctx, cfg)
+	if err != nil {
+		return gi, err
+	}
+
+	gi.client = client
+	return gi, nil
+}
